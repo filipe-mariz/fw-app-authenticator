@@ -14,23 +14,8 @@ export class AuthenticationController {
     return this.authenticationService.createTokenRedis(createAuthenticationDto);
   }
 
-  @Get()
-  findAll() {
-    return this.authenticationService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authenticationService.findOne(id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthenticationDto: UpdateAuthenticationDto) {
-    return this.authenticationService.update(+id, updateAuthenticationDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authenticationService.remove(+id);
+  @Get(':token')
+  findOne(@Param('token') token: string) {
+    return this.authenticationService.findOne(token);
   }
 }

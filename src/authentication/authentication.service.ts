@@ -6,9 +6,9 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 
 import { CreateAuthenticationDto } from './dto/create-authentication.dto';
-import { UpdateAuthenticationDto } from './dto/update-authentication.dto';
 import { users } from './entities/user.entity';
 
+import configCommon from 'src/config/common';
 
 @Injectable()
 export class AuthenticationService {
@@ -19,22 +19,22 @@ export class AuthenticationService {
     @InjectModel(users)
     private usersRepository: typeof users,
   ) {
-    this.client = new Redis({ host: 'localhost', port: 6379 })
+    this.client = new Redis({ host: 'localhost', port: 6379 });
   }
 
   public async createTokenRedis(createAuthenticationDto: CreateAuthenticationDto): Promise<Object> {
     const user: IUser = await this.getUserByEmail({ email: createAuthenticationDto.userId });
-    const comparePassword = this.comparePassword(user, createAuthenticationDto)
+    const comparePassword = this.comparePassword(user, createAuthenticationDto);
 
-    if (comparePassword === true) {
+    if (comparePassword) {
       return {
         code: 'INVALID_CREDENTIALS',
         message: 'email or password does not match'
-      }
+      };
     }
 
     const token: string = this.encript(createAuthenticationDto);
-    await this.client.set(createAuthenticationDto.userId, token);
+    await this.client.set(createAuthenticationDto.userId, token, 'EX', 3600);
 
     return { token };
   }
@@ -42,8 +42,8 @@ export class AuthenticationService {
   private async getUserByEmail(where: { email: string }): Promise<IUser> {
     const user: IUser = await this.repository.findOne<users>({
       where,
-      attributes: ['email', 'password']
-    })
+      attributes: ['email', 'password'],
+    });
 
     return user;
   };
@@ -54,27 +54,27 @@ export class AuthenticationService {
   }
 
   private encript(createAuthenticationDto: CreateAuthenticationDto) {
-    return jwt.sign({
-      authType: createAuthenticationDto.authType,
-      siglaApp: createAuthenticationDto.siglaApp,
-      userId: createAuthenticationDto.userId,
-      password: bcrypt.hashSync(JSON.stringify(createAuthenticationDto.password), 10)
-    }, 'F20W42')
+    return jwt.sign(
+      {
+        authType: createAuthenticationDto.authType,
+        siglaApp: createAuthenticationDto.siglaApp,
+        userId: createAuthenticationDto.userId,
+        password: bcrypt.hashSync(JSON.stringify(createAuthenticationDto.password), 10)
+      },
+      configCommon.jsonwebtokenCode,
+      {
+        expiresIn: "1h"
+      }
+    );
   }
 
-  findAll() {
-    return `This action returns all authentication`;
-  }
+  public findOne(token: string): object {
+    const decodedToken: any = jwt.decode(token);
 
-  findOne(id: string) {
-    return this.client.get(id);
-  }
-
-  update(id: number, updateAuthenticationDto: UpdateAuthenticationDto) {
-    return `This action updates a #${id} authentication`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} authentication`;
+    return {
+      authorization: this.client.get(decodedToken.userId)
+        ? true
+        : false
+    }
   }
 }
