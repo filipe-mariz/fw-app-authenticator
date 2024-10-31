@@ -2,13 +2,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { AuthenticationService } from './authentication.service';
 import { CreateAuthenticationDto } from './dto/create-authentication.dto';
 import { UpdateAuthenticationDto } from './dto/update-authentication.dto';
-import { UserService } from './users.service';
 
 @Controller('authentication')
 export class AuthenticationController {
   constructor(
     private readonly authenticationService: AuthenticationService,
-    private readonly usersService: UserService
   ) {}
 
   @Post('/login')
@@ -18,7 +16,7 @@ export class AuthenticationController {
 
   @Get()
   findAll() {
-    return this.usersService.findAllUsers();
+    return this.authenticationService.findAll();
   }
 
   @Get(':id')

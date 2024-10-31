@@ -6,7 +6,7 @@ import { Table, Model, Column } from "sequelize-typescript";
 	underscored: true,
 	paranoid: true,
 	scopes: {
-		defaultOption: {
+		defaultOptions: {
 			where: { deleted_at: null },
 			paranoid: false,
 			raw: true
