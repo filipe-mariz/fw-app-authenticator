@@ -2,7 +2,6 @@ import { InjectModel } from "@nestjs/sequelize";
 import Redis from "ioredis";
 import { users } from "../entities/user.entity";
 import { DatabaseService } from "./service";
-import { CreateAuthenticationDto } from "../dto/create-authentication.dto";
 
 export class DatabaseRepository implements DatabaseService {
 	private readonly repository = this.usersRepository.scope('defaultOptions');
