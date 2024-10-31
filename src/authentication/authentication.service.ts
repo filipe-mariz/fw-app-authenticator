@@ -1,30 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
-import Redis from 'ioredis';
 
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 
 import { CreateAuthenticationDto } from './dto/create-authentication.dto';
-import { users } from './entities/user.entity';
-
-import configCommon from 'src/config/common';
 import { DatabaseService } from './database/service';
+import configCommon from 'src/config/common';
 
 @Injectable()
 export class AuthenticationService {
-  private readonly repository = this.usersRepository.scope('defaultOptions');
-  private client: Redis;
-
-  constructor(
-    @InjectModel(users)
-    private usersRepository: typeof users,
-
-    private database: DatabaseService
-
-  ) {
-    this.client = new Redis({ host: 'localhost', port: 6379 });
-  }
+  constructor(private database: DatabaseService) { }
 
   public async createTokenRedis(createAuthenticationDto: CreateAuthenticationDto): Promise<Object> {
     const user: IUser = await this.database.getUser({ email: createAuthenticationDto.userId });

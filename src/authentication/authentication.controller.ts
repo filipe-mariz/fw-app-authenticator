@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { CreateAuthenticationDto } from './dto/create-authentication.dto';
 
@@ -8,7 +8,7 @@ export class AuthenticationController {
     private readonly authenticationService: AuthenticationService,
   ) {}
 
-  @Post('/login')
+  @Post()
   public async create(@Body() createAuthenticationDto: CreateAuthenticationDto) {
     return this.authenticationService.createTokenRedis(createAuthenticationDto);
   }
