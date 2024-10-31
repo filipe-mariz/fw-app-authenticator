@@ -1,7 +1,19 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body } from '@nestjs/common';
 import { RedisService } from './redis.service';
 
-@Controller('redis')
+@Controller('cache')
 export class RedisController {
-  constructor(private readonly redisService: RedisService) {}
+  constructor(private readonly redisService: RedisService) { }
+
+  @Post()
+  async set(@Body('value') value: { value: string }) {
+    const resp = await this.redisService.set('teste', JSON.stringify(value));
+    return resp;
+  }
+
+  @Get()
+  async get() {
+    const value = await this.redisService.get('teste');
+    return value
+  }
 }
