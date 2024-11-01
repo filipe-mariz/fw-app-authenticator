@@ -24,11 +24,21 @@ export class NoSqlRepository implements NoSqlService {
 		return createProduct.save();
 	}
 
+	public async getTokenMongo(userId: string) {
+		const cachedToken = await this.client.get(userId);
+		if (cachedToken) return cachedToken;
+
+    const data = await this.tokenRepository.findOne({ userId }).exec();
+		await this.client.set(userId, data.token, 'EX', 3600);
+
+		return data.token;
+  }
+
 	public async setTokenAtRedis(userId: string, token: string): Promise<void> {
 		await this.client.set(userId, token, 'EX', 3600);
 	}
 
-	public async getCache(userId: string): Promise<string> {
+	public async getTokenRedis(userId: string): Promise<string> {
 		const token = await this.client.get(userId);
 		return token;
 	}

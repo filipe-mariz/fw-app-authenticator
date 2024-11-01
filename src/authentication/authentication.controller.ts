@@ -15,6 +15,6 @@ export class AuthenticationController {
 
   @Get(':token')
   findOne(@Param('token') token: string) {
-    return this.authenticationService.findOne(token);
+    return this.authenticationService.findToken(token);
   }
 }

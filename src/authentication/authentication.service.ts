@@ -25,7 +25,7 @@ export class AuthenticationService {
       };
     }
 
-    const action = createAuthenticationDto.authType === 'CELLPHONE' ? 'setTokenAtMongo' : 'setTokenAtRedis'
+    const action = createAuthenticationDto.authType === 'CELLPHONE' ? 'setTokenAtMongo' : 'setTokenAtRedis';
     const token: string = this.encript(createAuthenticationDto);
     await this.noSql[action](createAuthenticationDto.userId, token);
 
@@ -52,11 +52,13 @@ export class AuthenticationService {
     );
   }
 
-  public async findOne(token: string) {
+  public async findToken(token: string) {
     const decodedToken: any = jwt.decode(token);
 
+    const action = decodedToken.authType === 'CELLPHONE' ? 'getTokenMongo' : 'getTokenRedis'
+
     return {
-      authorization: await this.noSql.getCache(decodedToken.userId)
+      authorization: await this.noSql[action](decodedToken.userId)
     }
   }
 }
