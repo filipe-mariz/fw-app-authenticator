@@ -1,6 +1,7 @@
 import { InjectModel } from "@nestjs/mongoose";
-import Redis from "ioredis";
 import { Model } from "mongoose";
+import Redis from "ioredis";
+
 import { NoSqlService } from "./service";
 import { TokenUser } from "../entities/token.entity";
 
@@ -15,7 +16,6 @@ export class NoSqlRepository implements NoSqlService {
 	}
 
 	public setTokenAtMongo(userId: string, token: string) {
-		console.log('chegou aqui')
 		const createProduct = new this.tokenRepository({
 			userId,
 			token
@@ -29,6 +29,7 @@ export class NoSqlRepository implements NoSqlService {
 	}
 
 	public async getCache(userId: string): Promise<string> {
-		return this.client.get(userId);
+		const token = await this.client.get(userId);
+		return token;
 	}
 }

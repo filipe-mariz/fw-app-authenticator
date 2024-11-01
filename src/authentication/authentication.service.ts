@@ -52,13 +52,11 @@ export class AuthenticationService {
     );
   }
 
-  public findOne(token: string): object {
+  public async findOne(token: string) {
     const decodedToken: any = jwt.decode(token);
 
     return {
-      authorization: this.noSql.getCache(decodedToken.userId)
-        ? true
-        : false
+      authorization: await this.noSql.getCache(decodedToken.userId)
     }
   }
 }

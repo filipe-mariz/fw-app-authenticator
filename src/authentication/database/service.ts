@@ -5,5 +5,5 @@ export abstract class SqlService {
 export abstract class NoSqlService {
   abstract setTokenAtMongo(userId: string, token: string)
   abstract setTokenAtRedis(userId: string, token: string): Promise<void>;
-  abstract getCache(userId: string): Promise<string>;
+  abstract getCache(userId: string): Promise<string | object>;
 }
