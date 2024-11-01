@@ -1,4 +1,3 @@
-// import { defaulTableSettings, primaryKey } from '../../../../utils/global/GlobalSequelize';
 import { Table, Model, Column } from "sequelize-typescript";
 
 @Table({

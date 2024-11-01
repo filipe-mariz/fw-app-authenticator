@@ -4,10 +4,12 @@ import { AppService } from './app.service';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { DatabaseModule } from './database/database.module';
 import sequelizeConfig from './database/sql.config';
+import { mongooseModule } from './database/nosql.config';
 
 @Module({
   imports: [
     sequelizeConfig,
+    mongooseModule,
     AuthenticationModule,
     DatabaseModule
   ],

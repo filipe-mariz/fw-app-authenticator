@@ -1,15 +1,16 @@
 import { SequelizeModule } from "@nestjs/sequelize";
 import { Sequelize } from "sequelize-typescript";
 import { users } from "src/authentication/entities/user.entity";
+import configCommon from 'src/config/common'
 
 export const models = [users]
 export const sequelizeConfig = SequelizeModule.forRoot({
 	dialect: 'postgres',
-	host: 'localhost',
-	port: 5432,
-	username: 'postgres',
-	password: '1234',
-	database: 'postgres',
+	host: configCommon.dbHost,
+	port: +configCommon.dbPort,
+	username: configCommon.dbUsername,
+	password: configCommon.dbPassword,
+	database: configCommon.dbDielect,
 	autoLoadModels: true,
 	synchronize: true,
 	logging: false,
@@ -22,11 +23,11 @@ export const databaseProviders = [
 		useFactory: async () => {
 			const sequelize = new Sequelize({
 				dialect: 'postgres',
-				host: 'localhost',
-				port: 5432,
-				username: 'postgres',
-				password: '1234',
-				database: 'postgres',
+				host: configCommon.dbHost,
+				port: +configCommon.dbPort,
+				username: configCommon.dbUsername,
+				password: configCommon.dbPassword,
+				database: configCommon.dbDielect,
 				logging: false
 			});
 			sequelize.addModels(models);

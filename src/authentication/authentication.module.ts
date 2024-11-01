@@ -3,11 +3,20 @@ import { AuthenticationService } from './authentication.service';
 import { AuthenticationController } from './authentication.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { users } from './entities/user.entity';
-import { DatabaseRepository } from './database/repository';
-import { DatabaseService } from './database/service';
+import { SqlRepository } from './database/sql.repository';
+import { SqlService, NoSqlService } from './database/service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { TokenUser, TokenUserSchema } from './entities/token.entity';
+import { NoSqlRepository } from './database/nosql.repository';
 
 @Module({
-  imports: [SequelizeModule.forFeature([users])],
+  imports: [
+    SequelizeModule.forFeature([users]),
+    MongooseModule.forFeature([{
+      name: TokenUser.name,
+      schema: TokenUserSchema
+    }])
+  ],
   controllers: [AuthenticationController],
   providers: [
     AuthenticationService,
@@ -16,9 +25,13 @@ import { DatabaseService } from './database/service';
       useValue: users,
     },
     {
-      provide: DatabaseService,
-      useClass: DatabaseRepository
-    }
+      provide: SqlService,
+      useClass: SqlRepository
+    },
+    {
+      provide: NoSqlService,
+      useClass: NoSqlRepository
+    },
   ],
   exports: [SequelizeModule]
 })

@@ -4,15 +4,18 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 
 import { CreateAuthenticationDto } from './dto/create-authentication.dto';
-import { DatabaseService } from './database/service';
+import { SqlService, NoSqlService } from './database/service';
 import configCommon from 'src/config/common';
 
 @Injectable()
 export class AuthenticationService {
-  constructor(private database: DatabaseService) { }
+  constructor(
+    private readonly sql: SqlService,
+    private readonly noSql: NoSqlService,
+  ) { }
 
   public async createTokenRedis(createAuthenticationDto: CreateAuthenticationDto): Promise<Object> {
-    const user: IUser = await this.database.getUser({ email: createAuthenticationDto.userId });
+    const user: IUser = await this.sql.getUser({ email: createAuthenticationDto.userId });
     const comparePassword = this.comparePassword(user, createAuthenticationDto);
 
     if (comparePassword) {
@@ -22,8 +25,9 @@ export class AuthenticationService {
       };
     }
 
+    const action = createAuthenticationDto.authType === 'CELLPHONE' ? 'setTokenAtMongo' : 'setTokenAtRedis'
     const token: string = this.encript(createAuthenticationDto);
-    await this.database.setCache(createAuthenticationDto.userId, token);
+    await this.noSql[action](createAuthenticationDto.userId, token);
 
     return { token };
   }
@@ -52,7 +56,7 @@ export class AuthenticationService {
     const decodedToken: any = jwt.decode(token);
 
     return {
-      authorization: this.database.getCache(decodedToken.userId)
+      authorization: this.noSql.getCache(decodedToken.userId)
         ? true
         : false
     }

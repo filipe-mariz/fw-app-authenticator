@@ -8,6 +8,7 @@ const env = {
 	DB_USERNAME: process.env.DB_USERNAME,
 	DB_DATABASE: process.env.DB_DATABASE,
 	DB_PASSWORD: process.env.DB_PASSWORD,
+	MONGO_HOST: process.env.MONGO_HOST
 }
 
 export default {
@@ -16,5 +17,6 @@ export default {
 	dbHost: env.DB_HOST,
 	dbPort: env.DB_PORT,
 	dbUsername: env.DB_USERNAME,
-	dbPassword: env.DB_PASSWORD
+	dbPassword: env.DB_PASSWORD,
+	mongoHost: env.MONGO_HOST
 }
