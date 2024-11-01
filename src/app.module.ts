@@ -5,13 +5,15 @@ import { AuthenticationModule } from './authentication/authentication.module';
 import { DatabaseModule } from './database/database.module';
 import sequelizeConfig from './database/sql.config';
 import { mongooseModule } from './database/nosql.config';
+import { UserConfirmationModule } from './user-confirmation/user-confirmation.module';
 
 @Module({
   imports: [
     sequelizeConfig,
     mongooseModule,
     AuthenticationModule,
-    DatabaseModule
+    DatabaseModule,
+    UserConfirmationModule
   ],
   controllers: [AppController],
   providers: [AppService],
