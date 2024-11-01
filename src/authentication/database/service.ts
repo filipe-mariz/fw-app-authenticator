@@ -3,8 +3,9 @@ export abstract class SqlService {
 }
 
 export abstract class NoSqlService {
-  abstract setTokenAtMongo(userId: string, token: string);
-  abstract getTokenMongo(userId: string);
-  abstract setTokenAtRedis(userId: string, token: string): Promise<void>;
+  abstract setTokenAtMongo(userId: string, token: string): Promise<object>;
+  abstract setTokenAtRedis(userId: string, token: string): Promise<string>;
+
+  abstract getTokenMongo(userId: string): Promise<string>;
   abstract getTokenRedis(userId: string): Promise<string | object>;
 }

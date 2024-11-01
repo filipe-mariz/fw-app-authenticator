@@ -15,16 +15,21 @@ export class NoSqlRepository implements NoSqlService {
 		this.client = new Redis({ host: 'localhost', port: 6379 });
 	}
 
-	public setTokenAtMongo(userId: string, token: string) {
-		const createProduct = new this.tokenRepository({
-			userId,
-			token
-		})
+	public async setTokenAtMongo(userId: string, token: string): Promise<object> {
+    const tokenExists = await this.tokenRepository.findOne({ userId }).exec();
+    if (tokenExists) {
+      return await Promise.all([
+        this.client.del(userId),
+        this.client.set(userId, token, 'EX', 3600),
+        this.tokenRepository.findByIdAndUpdate(tokenExists._id, { token })
+      ])
+    }
 
+		const createProduct = new this.tokenRepository({ userId, token })
 		return createProduct.save();
 	}
 
-	public async getTokenMongo(userId: string) {
+	public async getTokenMongo(userId: string): Promise<string> {
 		const cachedToken = await this.client.get(userId);
 		if (cachedToken) return cachedToken;
 
@@ -34,8 +39,14 @@ export class NoSqlRepository implements NoSqlService {
 		return data.token;
   }
 
-	public async setTokenAtRedis(userId: string, token: string): Promise<void> {
-		await this.client.set(userId, token, 'EX', 3600);
+	public async setTokenAtRedis(userId: string, token: string): Promise<string> {
+    const tokenExists = await this.getTokenRedis(userId);
+    if (tokenExists) {
+      await this.client.del(userId)
+    }
+
+		const resp = await this.client.set(userId, token, 'EX', 3600);
+    return resp
 	}
 
 	public async getTokenRedis(userId: string): Promise<string> {
