@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package auth;
+
+service AuthenticationService {
+    rpc Create(CreateAuthenticationDto) returns (Token) {}
+}
+
+message CreateAuthenticationDto {
+    string authType = 1;
+    string siglaApp = 2;
+    string userId = 3;
+    string password = 4;
+}
+
+message Token {
+    string token = 1;
+}
