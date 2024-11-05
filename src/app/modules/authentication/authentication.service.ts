@@ -15,7 +15,7 @@ export class AuthenticationService {
   ) { }
 
   public async createTokenRedis(createAuthenticationDto: CreateAuthenticationDto): Promise<Object> {
-    const user: IUser = await this.sql.getUser({ email: createAuthenticationDto.userId });
+    const user: IUser = await this.sql.findOne({ email: createAuthenticationDto.userId });
     const comparePassword = this.comparePassword(user, createAuthenticationDto);
 
     if (comparePassword) {

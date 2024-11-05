@@ -1,5 +1,5 @@
 export abstract class SqlService {
-  abstract getUser(where: { email: string }): Promise<IUser>;
+  abstract findOne(where: { email: string }): Promise<IUser>;
 }
 
 export abstract class NoSqlService {
