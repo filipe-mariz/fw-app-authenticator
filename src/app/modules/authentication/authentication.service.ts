@@ -5,7 +5,7 @@ import * as jwt from 'jsonwebtoken';
 
 import { CreateAuthenticationDto } from './dto/create-authentication.dto';
 import { SqlService, NoSqlService } from './database/service';
-import configCommon from 'src/config/common';
+import configCommon from '../../config/common';
 
 @Injectable()
 export class AuthenticationService {
@@ -54,7 +54,6 @@ export class AuthenticationService {
 
   public async findToken(token: string) {
     const decodedToken: any = jwt.decode(token);
-
     const action = decodedToken.authType === 'CELLPHONE' ? 'getTokenMongo' : 'getTokenRedis'
 
     return {

@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthenticationModule } from './authentication/authentication.module';
-import { DatabaseModule } from './database/database.module';
-import sequelizeConfig from './database/sql.config';
-import { mongooseModule } from './database/nosql.config';
-import { UserConfirmationModule } from './user-confirmation/user-confirmation.module';
-import { AuthModule } from './app/modules/auth/auth.module';
+import { DatabaseModule } from './app/database/database.module';
+import { mongooseModule } from './app/database/nosql.config';
+import { AuthenticationModule } from './app/modules/authentication/authentication.module';
+import { UserConfirmationModule } from './app/modules/user-confirmation/user-confirmation.module';
+import sequelizeConfig from './app/database/sql.config';
 
 @Module({
   imports: [
@@ -15,7 +14,6 @@ import { AuthModule } from './app/modules/auth/auth.module';
     AuthenticationModule,
     DatabaseModule,
     UserConfirmationModule,
-    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

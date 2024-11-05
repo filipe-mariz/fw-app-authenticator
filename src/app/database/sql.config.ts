@@ -1,7 +1,7 @@
 import { SequelizeModule } from "@nestjs/sequelize";
 import { Sequelize } from "sequelize-typescript";
-import { users } from "src/authentication/entities/user.entity";
-import configCommon from 'src/config/common'
+import configCommon from '../config/common'
+import { users } from "../modules/authentication/entities/user.entity";
 
 export const models = [users]
 export const sequelizeConfig = SequelizeModule.forRoot({

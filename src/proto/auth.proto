@@ -3,16 +3,21 @@ syntax = "proto3";
 package auth;
 
 service AuthenticationService {
-    rpc Create(CreateAuthenticationDto) returns (Token) {}
+  rpc Create(CreateAuthenticationDto) returns (Token) {}
+	rpc ValidToken(Token) returns (Authorization) {}
 }
 
 message CreateAuthenticationDto {
-    string authType = 1;
-    string siglaApp = 2;
-    string userId = 3;
-    string password = 4;
+	string authType = 1;
+	string siglaApp = 2;
+  string userId = 3;
+  string password = 4;
 }
 
 message Token {
-    string token = 1;
+  string token = 1;
+}
+
+message Authorization {
+	string authorization = 1;
 }

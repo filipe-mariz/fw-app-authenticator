@@ -6,15 +6,11 @@ import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const protoPath = join(__dirname, 'proto', 'auth.proto');
-
-  console.log(protoPath)
-
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.GRPC,
     options: {
       package: 'auth',
-      protoPath: join(__dirname, 'proto/auth.proto'),
+      protoPath:[join(__dirname, 'proto/auth.proto')],
       url: 'localhost:50051'
     }
   })
